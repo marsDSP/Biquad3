@@ -1,0 +1,71 @@
+# CMake
+build/
+cmake-build-*/
+CMakeCache.txt
+CMakeFiles/
+CMakeScripts/
+Testing/
+Makefile
+cmake_install.cmake
+install_manifest.txt
+compile_commands.json
+CTestTestfile.cmake
+_deps
+
+# C++ artifacts
+*.o
+*.obj
+*.a
+*.lib
+*.so
+*.dylib
+*.dll
+*.exe
+
+# JUCE plugin builds
+*.vst3
+*.component
+*.aaxplugin
+
+# Xcode
+*.xcodeproj
+!*.xcodeproj/project.pbxproj
+*.xcworkspace
+!*.xcworkspace/contents.xcworkspacedata
+xcuserdata/
+DerivedData/
+*.moved-aside
+*.hmap
+*.ipa
+*.dSYM.zip
+*.dSYM
+
+# Visual Studio
+.vs/
+*.sln
+*.vcxproj
+*.vcxproj.filters
+*.vcxproj.user
+*.suo
+*.user
+*.ncb
+*.aps
+*.pdb
+*.ilk
+*.log
+Debug/
+Release/
+x64/
+x86/
+
+# CLion
+.idea/
+cmake-build-*/
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# CPM
+.cpm/

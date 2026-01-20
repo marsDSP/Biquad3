@@ -1,0 +1,12 @@
+[submodule "modules/JUCE"]
+	path = modules/JUCE
+	url = https://github.com/juce-framework/JUCE.git
+[submodule "modules/cmake-includes"]
+	path = modules/cmake-includes
+	url = https://github.com/marsDSP/cmake-includes.git
+[submodule "modules/xsimd"]
+	path = modules/xsimd
+	url = https://github.com/xtensor-stack/xsimd.git
+[submodule "modules/test/Catch2"]
+	path = modules/test/Catch2
+	url = https://github.com/catchorg/Catch2.git
