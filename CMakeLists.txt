@@ -72,17 +72,25 @@ juce_add_plugin("${PROJECT_NAME}"
         IS_SYNTH FALSE
 )
 
+juce_generate_juce_header("${PROJECT_NAME}")
+
 add_compile_definitions(JUCE_PROJECT_NAME="${PROJECT_NAME}")
 
 # Define SharedCode as an INTERFACE library (no sources required)
 add_library(SharedCode INTERFACE
         source/Utils/Parameters.h
-        source/DSP/Biquad.h
+        source/DSP/BiquadNEON.h
         source/DSP/Engine.h
         source/Utils/Globals.h
         source/DSP/Base.h
         source/Utils/Panic.h
-        source/Utils/ConversionHelper.h)
+        source/Utils/UnitHelper.h
+        source/DSP/Qcalc.h
+        source/DSP/PolyphaseNEON.h
+        source/DSP/Interpolator.h
+        source/DSP/PolyphaseAVX.h
+        source/DSP/BiquadAVX.h
+        source/DSP/Resampler.h)
 
 # Set compile features for SharedCode
 target_compile_features(SharedCode INTERFACE cxx_std_23)

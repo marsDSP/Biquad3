@@ -69,3 +69,8 @@ cmake-build-*/
 
 # CPM
 .cpm/
+
+# Python
+.venv/
+__pycache__/
+*.py[cod]
