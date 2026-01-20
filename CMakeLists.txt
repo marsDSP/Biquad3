@@ -76,10 +76,13 @@ add_compile_definitions(JUCE_PROJECT_NAME="${PROJECT_NAME}")
 
 # Define SharedCode as an INTERFACE library (no sources required)
 add_library(SharedCode INTERFACE
-        source/Parameters.cpp
-        source/Parameters.h
-        source/Biquad.h
-        source/Engine.h)
+        source/Utils/Parameters.h
+        source/DSP/Biquad.h
+        source/DSP/Engine.h
+        source/Utils/Globals.h
+        source/DSP/Base.h
+        source/Utils/Panic.h
+        source/Utils/ConversionHelper.h)
 
 # Set compile features for SharedCode
 target_compile_features(SharedCode INTERFACE cxx_std_23)

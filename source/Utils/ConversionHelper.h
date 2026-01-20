@@ -1,0 +1,6 @@
+#pragma once
+
+#ifndef BIQUAD3_CONVERSIONHELPER_H
+#define BIQUAD3_CONVERSIONHELPER_H
+
+#endif
