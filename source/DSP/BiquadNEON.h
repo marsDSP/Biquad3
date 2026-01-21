@@ -3,18 +3,10 @@
 #ifndef BIQUAD3_BIQUADNEON_H
 #define BIQUAD3_BIQUADNEON_H
 
-#include <arm_neon.h>
-#include "Qcalc.h"
+// xsimd provides a portable SIMD layer (NEON on arm64).
+#include "BiquadSIMD.h"
 
-/*
- * Direct Form II Transposed Biquadratic Filter with ARM NEON SIMD optimization
- */
-
-class BiquadNEON {
-public:
-    BiquadNEON () = default;
-
-private:
-};
+// Kept as a named type for Engine's arch selection.
+using BiquadNEON = BiquadSIMD;
 
 #endif

@@ -3,6 +3,10 @@
 #include <JuceHeader.h>
 #include "DSP/Engine.h"
 
+#include <array>
+#include <atomic>
+#include <memory>
+
 // we don't need to force everything including this class to recompile if we
 // end up changing or editing params! (because we used std::unique_ptr)
 class Parameters;
@@ -42,34 +46,28 @@ public:
 
 private:
 
-    juce::AudioProcessorValueTreeState& vts;
+    juce::AudioProcessorValueTreeState vts;
     static juce::AudioProcessorValueTreeState::ParameterLayout createParameterLayout();
 
     void parameterChanged (const juce::String& paramID, float newValue) override;
     void updateParameters();
 
-    /*
-     * I used to just use Parameters params; here.
-     * I do now think it is more prudent to be able to ensure the processor
-     * is fully initialized before the parameter logic starts running or hooking into callbacks.
-     * Being able to control when objects are created is worth the heap allocation.
-     *
-     * If the Parameters class eventually needs a reference to the PluginProcessor or VTS
-     * (to attach listeners or look up parameter IDs), passing *this in the
-     * initialization list can be dangerous. PluginProcessor isn't fully built yet.
-     * std::unique_ptr delays this construction until the body of the constructor
-     * where it is safe to pass *this or other members.
-     *
-     * However, if at any point we don't have all the info needed to create the
-     * parameters object immediately, we can just leave it as nullptr initially.
-     *
-     * We can also reset the parameters object if we ever need to completely reload
-     * the parameter structure!
-     */
+    // Atomic parameter pointers for real-time safe access
+    std::atomic<float>* highShelfParam = nullptr;
+    std::atomic<float>* highShelfGainParam = nullptr;
+    std::atomic<float>* midPeakParam = nullptr;
+    std::atomic<float>* midPeakGainParam = nullptr;
+    std::atomic<float>* lowShelfParam = nullptr;
+    std::atomic<float>* lowShelfGainParam = nullptr;
+    std::atomic<float>* qModeParam = nullptr;
+    std::atomic<float>* bypassParam = nullptr;
 
-    std::unique_ptr<Parameters> params;
+    // Engines: 0 = HighShelf, 1 = MidPeak (Peaking), 2 = LowShelf
+    static constexpr int NUM_ENGINES = 3;
+    std::array<Engine, NUM_ENGINES> engines;
 
-    std::array<Engine, 5> engine;
+    // Default Q value for filters
+    static constexpr float defaultQ = 0.707f;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(PluginProcessor)
 };

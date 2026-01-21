@@ -8,24 +8,33 @@
 // ============================================ //
 
 static inline const juce::StringArray osItems = { "Off", "2x", "4x", "8x", "16x" };
-static inline const juce::StringArray qItems = {};
+static inline const juce::StringArray qModeItems = { "Constant Q", "Proportional Q" };
 
 // ============================================ //
 
 static const juce::ParameterID osChoiceID = { "osChoice", 1};
 static constexpr auto osChoiceName = "Oversampling";
 
-static const juce::ParameterID qChoiceID = { "qChoice", 1 };
-static constexpr auto qChoiceName = "Q";
+static const juce::ParameterID qModeID = { "qModeID", 1 };
+static constexpr auto qModeName = "Q Mode";
 
-static const juce::ParameterID hpfID = { "hpfID", 1 };
-static constexpr auto hpfName = "HPF";
+static const juce::ParameterID highShelfID = { "highShelfID", 1 };
+static constexpr auto highShelfName = "High Shelf Freq";
 
-static const juce::ParameterID notchID = { "notchID", 1 };
-static constexpr auto notchName = "Notch";
+static const juce::ParameterID highShelfGainID = { "highShelfGainID", 1 };
+static constexpr auto highShelfGainName = "High Shelf Gain";
 
-static const juce::ParameterID lpfID = { "lpfID", 1 };
-static constexpr auto lpfName = "LPF";
+static const juce::ParameterID midPeakID = { "midPeakID", 1 };
+static constexpr auto midPeakName = "Mid Peak Freq";
+
+static const juce::ParameterID midPeakGainID = { "midPeakGainID", 1 };
+static constexpr auto midPeakGainName = "Mid Peak Gain";
+
+static const juce::ParameterID lowShelfID = { "lowShelfID", 1 };
+static constexpr auto lowShelfName = "Low Shelf Freq";
+
+static const juce::ParameterID lowShelfGainID = { "lowShelfGainID", 1 };
+static constexpr auto lowShelfGainName = "Low Shelf Gain";
 
 static const juce::ParameterID bypassID = { "bypassID", 1 };
 static constexpr auto bypassName = "Bypass";

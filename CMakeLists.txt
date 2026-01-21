@@ -102,6 +102,8 @@ target_include_directories(SharedCode INTERFACE
         # Add top-level modules include so third-party module headers resolve
         # e.g. allows includes like <melatonin_inspector/...>
         "${CMAKE_CURRENT_SOURCE_DIR}/modules"
+        # xsimd headers live under modules/xsimd/include
+        "${CMAKE_CURRENT_SOURCE_DIR}/modules/xsimd/include"
 )
 
 # Set JUCE flags for SharedCode
