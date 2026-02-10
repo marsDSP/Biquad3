@@ -2,6 +2,8 @@
 
 #include <JuceHeader.h>
 #include "DSP/Engine.h"
+#include "SPSC.h"
+#include "Measurement.h"
 
 #include <array>
 #include <atomic>
@@ -69,5 +71,14 @@ private:
     // Default Q value for filters
     static constexpr float defaultQ = 0.707f;
 
+public:
+    using BlockType = juce::AudioBuffer<float>;
+    SingleChannelSampleFifo<BlockType> leftChannelFifo  { Channel::Left };
+    SingleChannelSampleFifo<BlockType> rightChannelFifo { Channel::Right };
+
+    Measurement measurementL;
+    Measurement measurementR;
+
+private:
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(PluginProcessor)
 };

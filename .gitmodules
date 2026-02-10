@@ -10,3 +10,9 @@
 [submodule "modules/test/Catch2"]
 	path = modules/test/Catch2
 	url = https://github.com/catchorg/Catch2.git
+[submodule "modules/melatonin_inspector"]
+	path = modules/melatonin_inspector
+	url = https://github.com/sudara/melatonin_inspector.git
+[submodule "modules/sst-jucegui"]
+	path = modules/sst-jucegui
+	url = https://github.com/surge-synthesizer/sst-jucegui.git

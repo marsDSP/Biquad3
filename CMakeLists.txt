@@ -20,6 +20,9 @@ if(BUILD_AUDIO_PLUGIN_HOST)
     add_subdirectory(modules/JUCE/extras/AudioPluginHost)
 endif()
 
+# Build sst-jucegui (required for MenuButton UI components)
+add_subdirectory(modules/sst-jucegui)
+
 # Project configuration
 set(CMAKE_CXX_STANDARD 23)
 
@@ -80,17 +83,34 @@ add_compile_definitions(JUCE_PROJECT_NAME="${PROJECT_NAME}")
 add_library(SharedCode INTERFACE
         source/Utils/Parameters.h
         source/DSP/BiquadNEON.h
+        source/DSP/BiquadAVX.h
+        source/DSP/BiquadSIMD.h
         source/DSP/Engine.h
         source/Utils/Globals.h
         source/DSP/Base.h
         source/Utils/Panic.h
         source/Utils/UnitHelper.h
         source/DSP/Qcalc.h
-        source/DSP/PolyphaseNEON.h
-        source/DSP/Interpolator.h
-        source/DSP/PolyphaseAVX.h
-        source/DSP/BiquadAVX.h
-        source/DSP/Resampler.h)
+        source/DSP/Resampler.h
+        source/FFT.h
+        source/SPSC.h
+        source/LookAndFeel.h
+        source/ResponseCurve.h
+        source/RotaryKnob.h
+        source/RotaryKnob.cpp
+        source/ResponseCurve.cpp
+        source/Colors.h
+        source/Fonts.h
+        source/Fonts.cpp
+        source/KnobLNF.cpp
+        source/KnobLNF.h
+        source/MainLNF.cpp
+        source/MainLNF.h
+        source/ButtonLNF.cpp
+        source/ButtonLNF.h
+        source/Measurement.h
+        source/LevelMeter.h
+        source/LevelMeter.cpp)
 
 # Set compile features for SharedCode
 target_compile_features(SharedCode INTERFACE cxx_std_23)
@@ -102,6 +122,8 @@ target_include_directories(SharedCode INTERFACE
         # Add top-level modules include so third-party module headers resolve
         # e.g. allows includes like <melatonin_inspector/...>
         "${CMAKE_CURRENT_SOURCE_DIR}/modules"
+        # sst-jucegui public headers live under modules/sst-jucegui/include
+        "${CMAKE_CURRENT_SOURCE_DIR}/modules/sst-jucegui/include"
         # xsimd headers live under modules/xsimd/include
         "${CMAKE_CURRENT_SOURCE_DIR}/modules/xsimd/include"
 )
@@ -138,13 +160,13 @@ endif()
 # Assets setup
 file(GLOB_RECURSE Assets "${CMAKE_CURRENT_SOURCE_DIR}/assets/*.*")
 
-# No binary-data target currently; if you need to embed assets, use:
-# juce_add_binary_data(AudioPluginData SOURCES ${Assets})
-# and then link it to SharedCode and the plugin target.
+juce_add_binary_data(AudioPluginData SOURCES ${Assets})
 
 # Link libraries to main project
  target_link_libraries("${PROJECT_NAME}" PRIVATE
          SharedCode
+         AudioPluginData
+         sst-jucegui
          juce::juce_audio_basics
          juce::juce_audio_devices
          juce::juce_audio_formats

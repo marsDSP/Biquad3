@@ -47,12 +47,12 @@ juce::AudioProcessorValueTreeState::ParameterLayout PluginProcessor::createParam
 {
     std::vector<std::unique_ptr<juce::RangedAudioParameter>> params;
 
-    // High Shelf: frequency (20Hz - 20kHz, default 1kHz)
+    // High Shelf: frequency (20Hz - 20kHz, default 8kHz)
     params.push_back(std::make_unique<juce::AudioParameterFloat>(
         highShelfID,
         highShelfName,
         juce::NormalisableRange<float>(20.0f, 20000.0f, 0.1f, 0.3f),
-        1000.0f,
+        8000.0f,
         juce::AudioParameterFloatAttributes().withLabel("Hz")
     ));
 
@@ -83,12 +83,12 @@ juce::AudioProcessorValueTreeState::ParameterLayout PluginProcessor::createParam
         juce::AudioParameterFloatAttributes().withLabel("dB")
     ));
 
-    // Low Shelf: frequency (20Hz - 20kHz, default 1kHz)
+    // Low Shelf: frequency (20Hz - 20kHz, default 200Hz)
     params.push_back(std::make_unique<juce::AudioParameterFloat>(
         lowShelfID,
         lowShelfName,
         juce::NormalisableRange<float>(20.0f, 20000.0f, 0.1f, 0.3f),
-        1000.0f,
+        200.0f,
         juce::AudioParameterFloatAttributes().withLabel("Hz")
     ));
 
@@ -230,6 +230,10 @@ void PluginProcessor::prepareToPlay(double sampleRate, int samplesPerBlock)
         engine.prepare(sampleRate, samplesPerBlock);
     }
 
+    // Prepare FFT FIFOs
+    leftChannelFifo.prepare(samplesPerBlock);
+    rightChannelFifo.prepare(samplesPerBlock);
+
     // Set initial parameters
     updateParameters();
 }
@@ -264,8 +268,6 @@ void PluginProcessor::processBlock(juce::AudioBuffer<float> &buffer,
                                    juce::MidiBuffer &midiMessages)
 {
     juce::ignoreUnused(midiMessages);
-
-    // Standard JUCE safety: clear any output channels beyond what we're using
     juce::ScopedNoDenormals noDenormals;
     auto totalNumInputChannels = getTotalNumInputChannels();
     auto totalNumOutputChannels = getTotalNumOutputChannels();
@@ -290,11 +292,22 @@ void PluginProcessor::processBlock(juce::AudioBuffer<float> &buffer,
     // Update parameters from the atomic values (real-time safe)
     updateParameters();
 
-    // Process through each engine in series: HPF -> Notch -> LPF
+    // Process through each engine in series: HighShelf -> MidPeak -> LowShelf
     for (auto& engine : engines)
     {
         engine.processBlock(buffer);
     }
+
+    // Push processed audio into FFT FIFOs
+    leftChannelFifo.update(buffer);
+    rightChannelFifo.update(buffer);
+
+    // Update level measurements
+    auto numSamples = buffer.getNumSamples();
+    if (buffer.getNumChannels() > 0)
+        measurementL.updateIfGreater(buffer.getMagnitude(0, 0, numSamples));
+    if (buffer.getNumChannels() > 1)
+        measurementR.updateIfGreater(buffer.getMagnitude(1, 0, numSamples));
 }
 
 //==============================================================================
@@ -304,8 +317,8 @@ bool PluginProcessor::hasEditor() const
 }
 
 juce::AudioProcessorEditor *PluginProcessor::createEditor()
-{ // Use generic gui for editor for now
-    return new juce::GenericAudioProcessorEditor(*this);
+{
+    return new PluginEditor(*this);
 }
 
 //==============================================================================

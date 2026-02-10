@@ -7,15 +7,11 @@
 #if defined(__arm64__) || defined(__aarch64__) || defined(_M_ARM64)
     // ARM64: Apple Silicon (M1/M2/M3), ARM-based devices
     #include "BiquadNEON.h"
-    #include "PolyphaseNEON.h"
     using Biquad = BiquadNEON;
-    using PolyphaseStage = PolyphaseStageNEON;
 #elif defined(__x86_64__) || defined(_M_X64) || defined(__i386__) || defined(_M_IX86)
     // x86/x86_64: Intel/AMD processors
     #include "BiquadAVX.h"
-    #include "PolyphaseAVX.h"
     using Biquad = BiquadAVX;
-    using PolyphaseStage = PolyphaseStageAVX;
 #else
     #error "Unsupported architecture: requires ARM64 (NEON) or x86/x86_64 (AVX)"
 #endif
